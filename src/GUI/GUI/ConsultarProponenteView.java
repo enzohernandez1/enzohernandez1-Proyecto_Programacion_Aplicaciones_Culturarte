@@ -179,6 +179,7 @@ public class ConsultarProponenteView extends JInternalFrame {
 		contentPane.add(lblUsuario);
 		
 		txtUsuario = new JTextField();
+		txtUsuario.setForeground(new Color(0, 0, 0));
 		txtUsuario.setBackground(new Color(255, 255, 255));
 		txtUsuario.setEditable(false);
 		txtUsuario.setEnabled(false);

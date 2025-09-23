@@ -29,6 +29,11 @@ import java.time.LocalDate;
 
 
 public class V_R_ColaboraciónPropuesta extends JInternalFrame {
+	// Confirmar cierre al cambiar de opción de menú
+	public boolean confirmarCerrar() {
+		int confirm = JOptionPane.showConfirmDialog(this, "¿Seguro que desea cambiar de opción?", "Confirmar cambio", JOptionPane.YES_NO_OPTION);
+		return confirm == JOptionPane.YES_OPTION;
+	}
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -508,13 +513,14 @@ public class V_R_ColaboraciónPropuesta extends JInternalFrame {
 				}
 			 	
 			 	try {
-		            usrController.Registrar(retornoSeleccionado, monto, textField_8.getText(), textField_7.getText());
-		            JOptionPane.showMessageDialog(
-		                null,
-		                "Colaborador registrado exitosamente",
-		                "¡Éxito!",
-		                JOptionPane.INFORMATION_MESSAGE
-		            );
+					usrController.Registrar(retornoSeleccionado, monto, textField_8.getText(), textField_7.getText());
+					JOptionPane.showMessageDialog(
+						null,
+						"Colaborador registrado exitosamente",
+						"¡Éxito!",
+						JOptionPane.INFORMATION_MESSAGE
+					);
+					dispose();
 		        } catch (Exception ex) { //sacamos el error o exception de la funcion Registrar
 		            JOptionPane.showMessageDialog(
 		                null,
@@ -537,7 +543,10 @@ public class V_R_ColaboraciónPropuesta extends JInternalFrame {
 		contentPane.add(btnNewButton_4);
 		btnNewButton_4.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea cancelar y salir?", "Confirmar salida", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+				}
 			}
 		});		
 
@@ -601,7 +610,12 @@ public class V_R_ColaboraciónPropuesta extends JInternalFrame {
 
 				// Actualizar ComboBox de Retorno
 				combo1.removeAllItems();
-				combo1.addItem(dto.getTipoRetorno());
+				if (dto.getTipoRetorno() == logic.TipoRetorno.AMBOS_RETORNOS) {
+					combo1.addItem(logic.TipoRetorno.ENTRADA_GRATIS);
+					combo1.addItem(logic.TipoRetorno.PORCENTAJE_GANANCIAS);
+				} else {
+					combo1.addItem(dto.getTipoRetorno());
+				}
 				combo1.setSelectedIndex(0);
 
 				byte[] imagendata = dto.getImagen();

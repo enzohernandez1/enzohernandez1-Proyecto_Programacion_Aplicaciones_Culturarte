@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -119,11 +120,12 @@ public class main_menu extends JFrame {
 					}
 				}
 				if (activo != null) {
-					int confirm = javax.swing.JOptionPane.showConfirmDialog(null, "¿Seguro que desea cambiar?", "Confirmar", javax.swing.JOptionPane.YES_NO_OPTION);
-					if (confirm != 0) {
+					int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de cancelar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+					if (confirm == JOptionPane.YES_OPTION) {
+						activo.dispose();
+					} else {
 						return;
 					}
-					activo.dispose();
 				}
 				AltaPropuestaView altaPropuesta = new AltaPropuestaView();
 				// Título revertido
@@ -334,8 +336,15 @@ public class main_menu extends JFrame {
 					}
 				}
 				if (activo != null) {
-					int confirm = javax.swing.JOptionPane.showConfirmDialog(null, "¿Seguro que desea cambiar?", "Confirmar", javax.swing.JOptionPane.YES_NO_OPTION);
-					if (confirm != 0) {
+					boolean cerrar = true;
+					// Si es V_R_ColaboraciónPropuesta, usar confirmarCerrar
+					if (activo instanceof V_R_ColaboraciónPropuesta) {
+						cerrar = ((V_R_ColaboraciónPropuesta)activo).confirmarCerrar();
+					} else {
+						int confirm = javax.swing.JOptionPane.showConfirmDialog(null, "¿Seguro que desea cambiar?", "Confirmar", javax.swing.JOptionPane.YES_NO_OPTION);
+						cerrar = (confirm == 0);
+					}
+					if (!cerrar) {
 						return;
 					}
 					activo.dispose();
@@ -361,6 +370,21 @@ public class main_menu extends JFrame {
 		btnModificarPropuesta.setForeground(new Color(0, 0, 0));
 		btnModificarPropuesta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				JInternalFrame activo = null;
+				for (JInternalFrame frame : desktopPane.getAllFrames()) {
+					if (frame.isVisible()) {
+						activo = frame;
+						break;
+					}
+				}
+				if (activo != null) {
+					int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de cancelar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+					if (confirm == JOptionPane.YES_OPTION) {
+						activo.dispose();
+					} else {
+						return;
+					}
+				}
 				ModificarDatosDePropuestaView modificarPropuesta = new ModificarDatosDePropuestaView();
 				desktopPane.add(modificarPropuesta);
 				modificarPropuesta.setVisible(true);
@@ -383,6 +407,21 @@ public class main_menu extends JFrame {
 		btnCancelarColaboracion.setForeground(new Color(0, 0, 0));
 		btnCancelarColaboracion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				JInternalFrame activo = null;
+				for (JInternalFrame frame : desktopPane.getAllFrames()) {
+					if (frame.isVisible()) {
+						activo = frame;
+						break;
+					}
+				}
+				if (activo != null) {
+					int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de cancelar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+					if (confirm == JOptionPane.YES_OPTION) {
+						activo.dispose();
+					} else {
+						return;
+					}
+				}
 				CancelarColaboracionPropuestaView cancelarColaboracion = new CancelarColaboracionPropuestaView();
 				desktopPane.add(cancelarColaboracion);
 				cancelarColaboracion.setVisible(true);
@@ -404,6 +443,21 @@ public class main_menu extends JFrame {
 		btnConsultarColaboracion.setForeground(new Color(0, 0, 0));
 		btnConsultarColaboracion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				JInternalFrame activo = null;
+				for (JInternalFrame frame : desktopPane.getAllFrames()) {
+					if (frame.isVisible()) {
+						activo = frame;
+						break;
+					}
+				}
+				if (activo != null) {
+					int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de cancelar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+					if (confirm == JOptionPane.YES_OPTION) {
+						activo.dispose();
+					} else {
+						return;
+					}
+				}
 				ConsultaColaboracionPropuestaView consultaColaboracion = new ConsultaColaboracionPropuestaView();
 				desktopPane.add(consultaColaboracion);
 				consultaColaboracion.setVisible(true);
@@ -430,6 +484,21 @@ public class main_menu extends JFrame {
 		btnSeguirUsuario.setBackground(new Color(255, 255, 255));
 		btnSeguirUsuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				JInternalFrame activo = null;
+				for (JInternalFrame frame : desktopPane.getAllFrames()) {
+					if (frame.isVisible()) {
+						activo = frame;
+						break;
+					}
+				}
+				if (activo != null) {
+					int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de cancelar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+					if (confirm == JOptionPane.YES_OPTION) {
+						activo.dispose();
+					} else {
+						return;
+					}
+				}
 				SeguirUsuarioView seguirUsuario = new SeguirUsuarioView();
 				desktopPane.add(seguirUsuario);
 				seguirUsuario.setVisible(true);
@@ -451,6 +520,21 @@ public class main_menu extends JFrame {
 		btnDejarDeSeguir.setBackground(new Color(255, 255, 255));
 		btnDejarDeSeguir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				JInternalFrame activo = null;
+				for (JInternalFrame frame : desktopPane.getAllFrames()) {
+					if (frame.isVisible()) {
+						activo = frame;
+						break;
+					}
+				}
+				if (activo != null) {
+					int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de cancelar?", "Confirmar", JOptionPane.YES_NO_OPTION);
+					if (confirm == JOptionPane.YES_OPTION) {
+						activo.dispose();
+					} else {
+						return;
+					}
+				}
 				DejarDeSeguirUsuarioView dejarDeSeguir = new DejarDeSeguirUsuarioView();
 				desktopPane.add(dejarDeSeguir);
 				dejarDeSeguir.setVisible(true);

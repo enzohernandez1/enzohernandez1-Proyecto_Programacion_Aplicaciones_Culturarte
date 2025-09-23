@@ -327,12 +327,14 @@ public class AltaPerfilView extends JInternalFrame {
 					if(cmbTipoUsuario.getSelectedItem() == "Proponente") {
 						if(usrController.AltaProponente(txtUsuario.getText(), txtNombre.getText(), txtApellido.getText(), txtCorreo.getText(), fechaNac, imagenEnBytes, txtDireccion.getText(), taBiografia.getText(), txtLinkWeb.getText())) {
 							JOptionPane.showMessageDialog(null, "Usuario creado con exito", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+							dispose();
 						}else {
 							JOptionPane.showMessageDialog(null, "Error al crear el usuario", "Error", JOptionPane.INFORMATION_MESSAGE);
 						}
 					}else { // ES COLABORADOR
 						if(usrController.AltaColaborador(txtUsuario.getText(), txtNombre.getText(), txtApellido.getText(), txtCorreo.getText(), fechaNac, imagenEnBytes)) {
 							JOptionPane.showMessageDialog(null, "Usuario creado con exito", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+							dispose();
 						}else {
 							JOptionPane.showMessageDialog(null, "Error al crear el usuario", "Error", JOptionPane.INFORMATION_MESSAGE);
 						}

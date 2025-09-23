@@ -1,7 +1,7 @@
 package GUI;
-import java.awt.EventQueue;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -9,7 +9,6 @@ import javax.swing.border.EmptyBorder;
 import logic.DTDetalleAporte;
 import logic.Fabric;
 import logic.IController;
-import javax.swing.JButton;
 
 public class CancelarColaboracionPropuestaView extends JInternalFrame {
 
@@ -113,14 +112,24 @@ public class CancelarColaboracionPropuestaView extends JInternalFrame {
 		comboColaboraciones.removeAllItems();
 		List<DTDetalleAporte> aportes = usrController.listarAportes();
 		for (DTDetalleAporte aporte : aportes) {
-			comboColaboraciones.addItem(aporte.getId());
+			String display = aporte.getNicknameColaborador() + " - " + aporte.getNombrePropuesta();
+			comboColaboraciones.addItem(display);
 		}
 	}
 
 	private void mostrarDetallesColaboracion() {
 		String seleccion = (String) comboColaboraciones.getSelectedItem();
 		if (seleccion == null) return;
-	DTDetalleAporte aporte = usrController.obtenerAportePorId(seleccion);
+		// Buscar el aporte por el display string
+		List<DTDetalleAporte> aportes = usrController.listarAportes();
+		DTDetalleAporte aporte = null;
+		for (DTDetalleAporte a : aportes) {
+			String display = a.getNicknameColaborador() + " - " + a.getNombrePropuesta();
+			if (display.equals(seleccion)) {
+				aporte = a;
+				break;
+			}
+		}
 		if (aporte != null) {
 			txtNickname.setText(aporte.getNicknameColaborador());
 			txtPropuesta.setText(aporte.getNombrePropuesta());
@@ -143,12 +152,7 @@ public class CancelarColaboracionPropuestaView extends JInternalFrame {
 		if (confirm == javax.swing.JOptionPane.YES_OPTION) {
 			usrController.cancelarAporte(seleccion);
 			javax.swing.JOptionPane.showMessageDialog(this, "Colaboración cancelada exitosamente.");
-			poblarColaboraciones();
-			txtNickname.setText("");
-			txtPropuesta.setText("");
-			txtFechaHora.setText("");
-			txtMonto.setText("");
-			txtTipoRetorno.setText("");
+			dispose();
 		}
 	}
 }

@@ -1,34 +1,31 @@
 package GUI;
-import java.awt.EventQueue;
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 import javax.swing.border.EmptyBorder;
 
 import logic.DTCategoria;
 import logic.Fabric;
 import logic.IController;
 import logic.TipoRetorno;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.JTextArea;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
-import java.util.Date;
-import java.util.List;
-import java.util.Calendar;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.ImageIcon;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.awt.Color;
-import java.awt.Dialog.ModalExclusionType;
 
 public class AltaPropuestaView extends JInternalFrame {
 
@@ -70,10 +67,14 @@ public class AltaPropuestaView extends JInternalFrame {
 	lblProponente.setBounds(32, 60, 84, 12);
 	contentPane.add(lblProponente);
 
-	txtProponente = new JTextField();
-	txtProponente.setBounds(190, 57, 155, 18);
-	contentPane.add(txtProponente);
-	txtProponente.setColumns(10);
+	JComboBox<String> cmbProponentes = new JComboBox<>();
+	cmbProponentes.setBounds(190, 57, 155, 18);
+	List<logic.DTProponente> proponentes = usrController.listarProponentes();
+	cmbProponentes.removeAllItems();
+	for (logic.DTProponente prop : proponentes) {
+		cmbProponentes.addItem(prop.getNickname());
+	}
+	contentPane.add(cmbProponentes);
 		
 		JLabel lblTipoEspectaculo = new JLabel("Tipo de Espectaculo*");
 		lblTipoEspectaculo.setBounds(32, 100, 128, 12);
@@ -151,6 +152,7 @@ public class AltaPropuestaView extends JInternalFrame {
 	cmbTipoRetorno.setBounds(190, 468, 155, 20);
 	cmbTipoRetorno.addItem("ENTRADA_GRATIS");
 	cmbTipoRetorno.addItem("PORCENTAJE_GANANCIAS");
+	cmbTipoRetorno.addItem("AMBOS_RETORNOS");
 	contentPane.add(cmbTipoRetorno);
 		
 		JLabel lblImagen = new JLabel("Imagen");
@@ -236,11 +238,13 @@ public class AltaPropuestaView extends JInternalFrame {
 				String tipoRetornoStr = cmbTipoRetorno.getSelectedItem().toString();
 				if (tipoRetornoStr.equals("ENTRADA_GRATIS")) tipoRetornoStr = "ENTRADA_GRATIS";
 				else if (tipoRetornoStr.equals("PORCENTAJE_GANANCIAS")) tipoRetornoStr = "PORCENTAJE_GANANCIAS";
+				else if (tipoRetornoStr.equals("AMBOS_RETORNOS")) tipoRetornoStr = "AMBOS_RETORNOS";
 				TipoRetorno tipoRetorno = TipoRetorno.valueOf(tipoRetornoStr);
 				String nombreCategoria = cmbTipoEspectaculo.getSelectedItem().toString();
 
 				usrController.AltaPropuesta(nickname, titulo, descripcion, imagen, lugar, fecha, precio, montoNecesario, tipoRetorno, nombreCategoria);
 				javax.swing.JOptionPane.showMessageDialog(this, "Propuesta creada exitosamente");
+				dispose();
 			} catch (Exception ex) {
 				if (ex.getMessage() != null && ex.getMessage().contains("No result found for query")) {
 					javax.swing.JOptionPane.showMessageDialog(this, "Error: El proponente seleccionado no existe.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
