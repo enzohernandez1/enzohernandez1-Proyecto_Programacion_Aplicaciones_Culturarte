@@ -21,6 +21,10 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import persistence.JpaService;
+
 /**
  *
  * @author urrut
@@ -38,7 +42,8 @@ public class UsuarioControllerTest {
     
     @AfterAll
     public static void tearDownClass() {
-        
+        limpiarBaseDeDatos();
+        JpaService.close();
     }
     
     @BeforeEach
@@ -48,7 +53,6 @@ public class UsuarioControllerTest {
     
     @AfterEach
     public void tearDown() {
-        
     }
 
     /**
@@ -338,6 +342,7 @@ public class UsuarioControllerTest {
      * Test of getDatosColaboracion method, of class UsuarioController.
      */
     @org.junit.jupiter.api.Test
+    @Order(0)
     public void testGetDatosColaboracion() {
         System.out.println("getDatosColaboracion");
         String nicknameColaborador = "ana456";
@@ -968,6 +973,68 @@ public class UsuarioControllerTest {
         DTDetalleAporte mixto1 = instance.getDatosColaboracion("ana456", "PropuestaInexistente");
         DTDetalleAporte mixto2 = instance.getDatosColaboracion("ColaboradorInexistente", "Concierto de musica");
         System.out.println("Pruebas mixtas completadas");
+    }
+    
+    /**
+     * Método para limpiar los datos de prueba específicos creados durante la ejecución de los tests.
+     */
+    private static void limpiarBaseDeDatos() {
+        EntityManager em = JpaService.getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        
+        try {
+            transaction.begin();
+            
+            System.out.println("Iniciando limpieza de datos de prueba...");
+            em.createQuery("DELETE FROM Aporte a WHERE a.propuesta.titulo = :titulo")
+              .setParameter("titulo", "Concierto de musica")
+              .executeUpdate();
+            System.out.println("Aportes de prueba eliminados");
+            em.createQuery("DELETE FROM Seguimiento s WHERE s.seguidor.nickname IN (:usuarios) OR s.seguido.nickname IN (:usuarios)")
+              .setParameter("usuarios", List.of("pablo123", "ana456"))
+              .executeUpdate();
+            System.out.println("Seguimientos de prueba eliminados");
+            em.createQuery("DELETE FROM Estado e WHERE e.propuesta.titulo = :titulo")
+              .setParameter("titulo", "Concierto de musica")
+              .executeUpdate();
+            System.out.println("Estados de propuestas de prueba eliminados");
+            em.createQuery("DELETE FROM Propuesta p WHERE p.titulo = :titulo")
+              .setParameter("titulo", "Concierto de musica")
+              .executeUpdate();
+            System.out.println("Propuestas de prueba eliminadas");
+            em.createQuery("DELETE FROM Colaborador c WHERE c.nickname IN (:nicknames)")
+              .setParameter("nicknames", List.of("ana456"))
+              .executeUpdate();
+            System.out.println("Colaboradores de prueba eliminados");
+            em.createQuery("DELETE FROM Proponente p WHERE p.nickname IN (:nicknames)")
+              .setParameter("nicknames", List.of("pablo123"))
+              .executeUpdate();
+            System.out.println("Proponentes de prueba eliminados");
+            try {
+                em.createQuery("DELETE FROM Usuario u WHERE u.nickname IN (:nicknames)")
+                  .setParameter("nicknames", List.of("pablo123", "ana456"))
+                  .executeUpdate();
+                System.out.println("Usuarios base de prueba eliminados");
+            } catch (Exception e) {
+                System.out.println("Tabla Usuario no existe o ya limpia");
+            }
+            em.createQuery("DELETE FROM Categoria c WHERE c.nombre = :nombre")
+              .setParameter("nombre", "nuevaCategoria")
+              .executeUpdate();
+            System.out.println("Categorías de prueba eliminadas");
+            transaction.commit();
+            System.out.println("Limpieza de datos de prueba completada exitosamente.");
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Error durante la limpieza de datos de prueba: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
     }
     
 }
