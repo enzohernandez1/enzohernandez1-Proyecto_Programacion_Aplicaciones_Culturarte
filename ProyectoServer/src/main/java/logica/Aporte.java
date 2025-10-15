@@ -33,13 +33,6 @@ public class Aporte {
 	public Aporte() {
 		
 	}
-	public Aporte(float monto, LocalDate fechaAporte, TipoRetorno retorno) {
-		this.id = id;
-		this.monto = monto;
-		this.fechaAporte = fechaAporte;
-		this.retorno = retorno;
-		
-	}
 	
 	public Aporte(float monto, LocalDate fechaAporte, TipoRetorno retorno,Colaborador colab, Propuesta prop) {
 		this.monto = monto;

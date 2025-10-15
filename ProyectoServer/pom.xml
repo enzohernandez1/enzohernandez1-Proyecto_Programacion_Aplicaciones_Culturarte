@@ -10,13 +10,6 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jacoco.version>0.8.10</jacoco.version>
-    </properties>
-
 <build>
 
     <plugins>
@@ -40,21 +33,6 @@
                 </excludes>
             </configuration>
         </plugin>
-
-        <!-- Plugin Maven Surefire para ejecutar tests -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>3.1.2</version>
-            <configuration>
-                <includes>
-                    <include>**/*Test.java</include>
-                    <include>**/*Tests.java</include>
-                </includes>
-                <!-- Asegurar que JaCoCo funcione correctamente -->
-                <argLine>@{argLine}</argLine>
-            </configuration>
-        </plugin>
         
         <!-- Plugin JaCoCo para cobertura de código -->
         <plugin>
@@ -67,8 +45,6 @@
                     <exclude>**/GUI/**</exclude>
                     <!-- Excluir DTOs/DataTypes del análisis -->
                     <exclude>**/DT*</exclude>
-                    <exclude>**/dto/**</exclude>
-                    <exclude>**/*DTO*</exclude>
                 </excludes>
             </configuration>
             <executions>
@@ -85,24 +61,7 @@
                         <goal>report</goal>
                     </goals>
                 </execution>
-                <execution>
-                    <id>post-test</id>
-                    <phase>test</phase>
-                    <goals>
-                        <goal>report</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
-                    </configuration>
-                </execution>
             </executions>
-        </plugin>
-
-        <!-- Plugin Maven Site para generar el sitio con reportes -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-site-plugin</artifactId>
-            <version>3.12.1</version>
         </plugin>
     </plugins>                
 </build>
@@ -159,49 +118,5 @@
         </dependency>
     </dependencies>
 
-    <!-- Perfiles de Maven -->
-    <profiles>
-        <profile>
-            <id>test-with-coverage</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>post-test-report</id>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
-    <!-- Configuración de reportes -->
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.10</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting>
 
 </project>

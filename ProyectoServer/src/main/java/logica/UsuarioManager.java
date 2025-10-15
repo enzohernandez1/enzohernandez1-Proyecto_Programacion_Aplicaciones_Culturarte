@@ -230,17 +230,6 @@ public class UsuarioManager {
 				return user.isEmpty();
 			}
 
-			private DTColaborador colaboradorToDatatype(Colaborador col) { // CONSULTAR SI UBICAR ACA O EN EL COLABORADOR
-				return new DTColaborador(
-						col.getNickname(), 
-						col.getNombre(), 
-						col.getApellido(), 
-						col.getCorreo(), 
-						col.getFecha(), 
-						col.getImagen()
-						);
-			}
-
 			public boolean AltaProponente(DTProponente DTprop) {
 				if(!existePerfil(DTprop.getNickname())) {
 					return false;

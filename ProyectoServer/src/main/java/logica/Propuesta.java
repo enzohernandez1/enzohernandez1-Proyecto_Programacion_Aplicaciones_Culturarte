@@ -54,22 +54,6 @@ public class Propuesta {
     @OneToMany(mappedBy = "propuesta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Aporte> aportes = new ArrayList<>();
     
-    public Propuesta(Long id, String titulo, String descripcion, byte[] imagen, String lugar, LocalDate fecha, float precio, float montoNecesario, TipoRetorno tipoRetorno, Proponente proponente, Categoria tipoEspectaculo) {
-        this.id = id;
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.imagen = imagen;
-        this.lugar = lugar;
-        this.fecha = fecha;
-        this.precio = precio;
-        this.montoNecesario = montoNecesario;
-        this.tipoRetorno = tipoRetorno;
-        this.proponente = proponente;
-        this.tipoEspectaculo = tipoEspectaculo;
-        this.fechaPublicacion = LocalDate.now();
-    this.aportes = new ArrayList<>();
-    }
-    
     public Propuesta(String titulo, String descripcion, byte[] imagen, String lugar, LocalDate fecha, float precio, float montoNecesario, TipoRetorno tipoRetorno, Proponente proponente, Categoria tipoEspectaculo) {
         this.titulo = titulo;
         this.descripcion = descripcion;
