@@ -1,0 +1,207 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ejemplo</groupId>
+    <artifactId>mi-proyecto</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jacoco.version>0.8.10</jacoco.version>
+    </properties>
+
+<build>
+
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.10.1</version> <!-- Usualmente la última versión estable -->
+            <configuration>
+                <source>11</source> <!-- Java versión de origen -->
+                <target>11</target> <!-- Java versión de destino -->
+            </configuration>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.2.0</version>
+            <configuration>
+                <excludes>
+                    <exclude>**/GUI/**</exclude>
+                </excludes>
+            </configuration>
+        </plugin>
+
+        <!-- Plugin Maven Surefire para ejecutar tests -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.1.2</version>
+            <configuration>
+                <includes>
+                    <include>**/*Test.java</include>
+                    <include>**/*Tests.java</include>
+                </includes>
+                <!-- Asegurar que JaCoCo funcione correctamente -->
+                <argLine>@{argLine}</argLine>
+            </configuration>
+        </plugin>
+        
+        <!-- Plugin JaCoCo para cobertura de código -->
+        <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.10</version>
+            <configuration>
+                <excludes>
+                    <!-- Excluir clases GUI del análisis de cobertura -->
+                    <exclude>**/GUI/**</exclude>
+                    <!-- Excluir DTOs/DataTypes del análisis -->
+                    <exclude>**/DT*</exclude>
+                    <exclude>**/dto/**</exclude>
+                    <exclude>**/*DTO*</exclude>
+                </excludes>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>prepare-agent</id>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>report</id>
+                    <phase>test</phase>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>post-test</id>
+                    <phase>test</phase>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
+        <!-- Plugin Maven Site para generar el sitio con reportes -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>3.12.1</version>
+        </plugin>
+    </plugins>                
+</build>
+
+    <dependencies>
+       <dependency>
+        <groupId>jakarta.persistence</groupId>
+        <artifactId>jakarta.persistence-api</artifactId>
+        <version>3.1.0</version>
+    </dependency>
+
+    
+    <dependency>
+        <groupId>org.hibernate.orm</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>6.4.4.Final</version>
+    </dependency>
+
+	<dependency>
+  		<groupId>org.mariadb.jdbc</groupId>
+  		<artifactId>mariadb-java-client</artifactId>
+  		<version>3.1.4</version> <!-- o la última versión estable -->
+	</dependency>
+
+<dependency>
+    <groupId>ch.qos.logback</groupId>
+    <artifactId>logback-classic</artifactId>
+    <version>1.2.3</version>
+</dependency>
+
+   
+    <dependency>
+    	<groupId>com.mysql</groupId>
+    	<artifactId>mysql-connector-j</artifactId>
+    	<version>8.0.33</version>
+	</dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.10.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.10.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- Perfiles de Maven -->
+    <profiles>
+        <profile>
+            <id>test-with-coverage</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>post-test-report</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <!-- Configuración de reportes -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.10</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
+</project>
