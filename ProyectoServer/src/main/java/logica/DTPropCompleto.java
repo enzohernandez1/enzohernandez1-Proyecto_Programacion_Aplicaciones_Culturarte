@@ -3,6 +3,7 @@ package logica;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import logica.TipoRetorno;
 
 public class DTPropCompleto {
 	private String titulo;
@@ -14,12 +15,9 @@ public class DTPropCompleto {
 	private float montoNecesario;
 	private LocalDate fechaPublicacion;
 	private List<Estado> estados;
-	private logica.TipoRetorno tipoRetorno;
+	private TipoRetorno tipoRetorno;
 	
 	
-	public logica.TipoRetorno getTipoRetorno() {
-		return tipoRetorno;
-	}
 
 	public void setTipoRetorno(logica.TipoRetorno tipoRetorno) {
 		this.tipoRetorno = tipoRetorno;
@@ -28,6 +26,19 @@ public class DTPropCompleto {
 	
 public DTPropCompleto() {
 	
+}
+
+public DTPropCompleto(Propuesta prop) {
+    this.titulo = prop.getTitulo();
+    this.descripcion = prop.getDescripcion();
+    this.imagen = prop.getImagen();
+    this.lugar = prop.getLugar();
+    this.fecha = prop.getFecha();
+    this.precio = prop.getPrecio();
+    this.montoNecesario = prop.getMontoNecesario();
+    this.fechaPublicacion = prop.getFechaPublicacion();
+    this.estados = prop.getEstados();
+    this.tipoRetorno = prop.getTipoRetorno();
 }
 
 //GETTERS
@@ -51,6 +62,9 @@ public float getPrecio() {
 }
 public float getMontoNecesario() {
 	return montoNecesario;
+}
+public TipoRetorno getTipoRetorno() {
+	return tipoRetorno;
 }
 public LocalDate fechaPublicacion() {
 	return fechaPublicacion;

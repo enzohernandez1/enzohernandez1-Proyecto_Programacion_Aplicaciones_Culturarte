@@ -54,6 +54,10 @@ public class Propuesta {
     @OneToMany(mappedBy = "propuesta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Aporte> aportes = new ArrayList<>();
     
+    //comentario de la propuesta
+    @OneToMany(mappedBy = "comenpropuesta")
+    private List<Comentario> comentarios;
+    
     public Propuesta(String titulo, String descripcion, byte[] imagen, String lugar, LocalDate fecha, float precio, float montoNecesario, TipoRetorno tipoRetorno, Proponente proponente, Categoria tipoEspectaculo) {
         this.titulo = titulo;
         this.descripcion = descripcion;

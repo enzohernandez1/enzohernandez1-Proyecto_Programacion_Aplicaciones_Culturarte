@@ -4,6 +4,8 @@
  */
 package logica;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,9 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import persistence.JpaService;
 
 /**
@@ -48,11 +47,11 @@ public class UsuarioControllerTest {
     
     @BeforeEach
     public void setUp() {
-        
     }
     
     @AfterEach
     public void tearDown() {
+        
     }
 
     /**
@@ -141,11 +140,14 @@ public class UsuarioControllerTest {
         String nombreCategoria = "nuevaCategoria";
         UsuarioController instance = new UsuarioController();
         instance.AltaPropuesta(nicknameProponente, titulo, descripcion, imagen, lugar, fecha, precio, montoNecesario, tipoRetorno, nombreCategoria);
+        
+        // Forzar commit y pequeña pausa para que la transacción se confirme
         try {
-            Thread.sleep(100);
+            Thread.sleep(100); // 100ms de pausa
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+        
         System.out.println("Propuesta creada: " + titulo);
     }
 
@@ -226,13 +228,18 @@ public class UsuarioControllerTest {
         
         UsuarioController instance = new UsuarioController();
         String titulo = "Concierto de musica";
+        
+        // Verificar que la propuesta existe antes de intentar modificarla
         List<String> titulos = instance.getTitulosPropuestas();
         System.out.println("Títulos disponibles: " + titulos);
+        
         if (!titulos.contains(titulo)) {
-            System.out.println("La propuesta '" + titulo + "' no existe. Saltando test de modificación.");
-            return;
+            System.out.println("ADVERTENCIA: La propuesta '" + titulo + "' no existe. Saltando test de modificación.");
+            return; // Salir del test sin error
         }
+        
         System.out.println("Propuesta encontrada. Procediendo con modificación...");
+        
         String nicknameProponente = "pablo123";
         String descripcion = "Descripcion actualizada del concierto";
         byte[] imagen = null;
@@ -243,6 +250,7 @@ public class UsuarioControllerTest {
         TipoRetorno tipoRetorno = TipoRetorno.PORCENTAJE_GANANCIAS;
         String nombreCategoria = "nuevaCategoria";
         EstadoENUM estado = EstadoENUM.PUBLICADA;
+        
         try {
             instance.modificarPropuesta(nicknameProponente, titulo, descripcion, imagen, lugar, fecha, precio, montoNecesario, tipoRetorno, nombreCategoria, estado);
             System.out.println("Propuesta modificada exitosamente");
@@ -342,7 +350,6 @@ public class UsuarioControllerTest {
      * Test of getDatosColaboracion method, of class UsuarioController.
      */
     @org.junit.jupiter.api.Test
-    @Order(0)
     public void testGetDatosColaboracion() {
         System.out.println("getDatosColaboracion");
         String nicknameColaborador = "ana456";
@@ -559,6 +566,7 @@ public class UsuarioControllerTest {
     }
     
     // ==================== TESTS PARA CASOS NEGATIVOS ====================
+    // Tests para aumentar cobertura de código probando casos de fallo
     
     /**
      * Test AltaProponente - Caso negativo: Usuario ya existe
@@ -611,7 +619,6 @@ public class UsuarioControllerTest {
         String seguidor = "pablo123";
         String seguido = "usuarioInexistente";
         UsuarioController instance = new UsuarioController();
-        
         assertThrows(RuntimeException.class, () -> {
             instance.SeguirUsuario(seguidor, seguido);
         });
@@ -624,7 +631,7 @@ public class UsuarioControllerTest {
     @Order(53)
     public void testSeguirUsuario_YaSeSigue() {
         System.out.println("SeguirUsuario - Ya se sigue al usuario");
-        String seguidor = "ana456";  // Cambiado: ana456 sigue a pablo123
+        String seguidor = "ana456";
         String seguido = "pablo123";
         UsuarioController instance = new UsuarioController();
         try {
@@ -679,7 +686,6 @@ public class UsuarioControllerTest {
         String nickname = "colaboradorInexistente";
         String titulo = "Concierto de musica";
         UsuarioController instance = new UsuarioController();
-        
         assertThrows(Exception.class, () -> {
             instance.Registrar(retorno, monto, nickname, titulo);
         });
@@ -831,8 +837,6 @@ public class UsuarioControllerTest {
         TipoRetorno tipoRetorno = TipoRetorno.PORCENTAJE_GANANCIAS;
         String nombreCategoria = "nuevaCategoria";
         UsuarioController instance = new UsuarioController();
-        
-        // Esto debería lanzar una excepción porque el título ya existe
         assertThrows(IllegalArgumentException.class, () -> {
             instance.AltaPropuesta(nicknameProponente, titulo, descripcion, imagen, lugar, fecha, precio, montoNecesario, tipoRetorno, nombreCategoria);
         });
@@ -861,7 +865,7 @@ public class UsuarioControllerTest {
     public void testAportes_DatosNull() {
         System.out.println("Test para cubrir casos con datos null en aportes");
         UsuarioController instance = new UsuarioController();
-        String[] idsInvalidos = {"", "null", "undefined", "-1", "0"};
+        String[] idsInvalidos = {"", "null", "undefined", "-1", "0"}; 
         for (String id : idsInvalidos) {
             DTDetalleAporte resultado = instance.obtenerAportePorId(id);
             System.out.println("ID probado: " + id + " - Resultado: " + (resultado != null ? "encontrado" : "null"));
@@ -888,6 +892,7 @@ public class UsuarioControllerTest {
     
     /**
      * Test para forzar la ejecución del bucle for en listarAportes
+     * creando múltiples aportes
      */
     @org.junit.jupiter.api.Test
     @Order(70)
@@ -912,6 +917,7 @@ public class UsuarioControllerTest {
     
     /**
      * Test para ejecutar getDatosColaboracion cuando existe la colaboración
+     * Este test debería ejecutar las líneas que verifican != null
      */
     @org.junit.jupiter.api.Test
     @Order(71)
@@ -933,6 +939,7 @@ public class UsuarioControllerTest {
             System.out.println("Colaboración no encontrada, probando con otros usuarios");
             String[] colaboradores = {"ana456", "pablo123"};
             String[] propuestas = {"Concierto de musica"};
+            
             for (String colab : colaboradores) {
                 for (String prop : propuestas) {
                     DTDetalleAporte test = instance.getDatosColaboracion(colab, prop);
@@ -947,6 +954,7 @@ public class UsuarioControllerTest {
     
     /**
      * Test específico para intentar ejecutar las ramas del operador ternario
+     * cuando los objetos pueden ser null
      */
     @org.junit.jupiter.api.Test
     @Order(72)
@@ -958,6 +966,7 @@ public class UsuarioControllerTest {
             "colaborador_inexistente_2", 
             "usuario_que_no_existe"
         };
+        
         String[] propuestasInexistentes = {
             "Propuesta_Inexistente_1",
             "Propuesta_Inexistente_2", 
@@ -972,12 +981,10 @@ public class UsuarioControllerTest {
         }
         DTDetalleAporte mixto1 = instance.getDatosColaboracion("ana456", "PropuestaInexistente");
         DTDetalleAporte mixto2 = instance.getDatosColaboracion("ColaboradorInexistente", "Concierto de musica");
+        
         System.out.println("Pruebas mixtas completadas");
     }
     
-    /**
-     * Método para limpiar los datos de prueba específicos creados durante la ejecución de los tests.
-     */
     private static void limpiarBaseDeDatos() {
         EntityManager em = JpaService.getEntityManager();
         EntityTransaction transaction = em.getTransaction();
@@ -1036,5 +1043,4 @@ public class UsuarioControllerTest {
             }
         }
     }
-    
 }

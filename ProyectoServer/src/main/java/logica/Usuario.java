@@ -2,6 +2,7 @@ package logica;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -17,6 +18,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 
 
 @Entity
@@ -50,6 +52,10 @@ public abstract class Usuario {
 			inverseJoinColumns = @JoinColumn(name = "propuesta_id")
 			)
 	private Set<Propuesta> propuestasFavoritas = new HashSet<>();
+        	
+	@OneToMany(mappedBy = "comenusuario")
+	private List<Comentario> comentarios;
+	
 
 	public Usuario() {}
 	
